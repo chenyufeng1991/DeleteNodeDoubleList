@@ -170,17 +170,53 @@ Node *deletePosList(Node *pNode,int pos){
     return pNode;
 }
 
+//判断x是否在链表中，存在则删除之
+Node *deleteValueList(Node *pNode,int x){
+
+    Node *pMove;
+    pMove = pNode;
+
+    //单独考虑删除第一个节点的情况
+    if (pNode->element == x) {
+        pNode = pNode->next;
+        free(pNode->prior);
+        pNode->prior = NULL;
+
+        printf("%s函数执行，删除值为%d节点成功\n",__FUNCTION__,x);
+        return pNode;
+    }
+
+    while (pMove != NULL) {
+        if (pMove->element == x) {
+
+            pMove->prior->next = pMove->next;
+            pMove->next->prior = pMove->prior;
+            free(pMove);
+            pMove = NULL;
+            printf("%s函数执行，删除值为%d节点成功\n",__FUNCTION__,x);
+            return pNode;
+        }
+        pMove = pMove->next;
+    }
+
+    printf("%s函数执行，删除值为%d节点失败\n",__FUNCTION__,x);
+    return pNode;
+}
+
 int main(int argc, const char * argv[]) {
 
     Node *pList;
-
+    
     initList(pList);
     printList(pList);
     
     pList = createList(pList);
     printList(pList);
     
-    pList = deletePosList(pList,1);
+//    pList = deletePosList(pList,1);
+//    printList(pList);
+
+    pList = deleteValueList(pList,5);
     printList(pList);
     
     return 0;
