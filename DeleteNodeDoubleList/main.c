@@ -175,8 +175,24 @@ Node *deleteValueList(Node *pNode,int x){
 
     Node *pMove;
     pMove = pNode;
+    int size = sizeList(pNode);
 
-    //单独考虑删除第一个节点的情况
+    //原链表为空
+    if (pNode == NULL) {
+        printf("%s函数执行，原链表为空，删除节点失败\n",__FUNCTION__);
+        return NULL;
+    }
+
+    //删除的是第一个节点，并且链表长度为1
+    if (pNode->element == x && size == 1) {
+
+        free(pNode);
+        pNode = NULL;
+        printf("%s函数执行，删除值为%d节点成功\n",__FUNCTION__,x);
+        return pNode;
+    }
+
+    //单独考虑删除第一个节点的情况,且链表长度大于1
     if (pNode->element == x) {
         pNode = pNode->next;
         free(pNode->prior);
@@ -187,10 +203,21 @@ Node *deleteValueList(Node *pNode,int x){
     }
 
     while (pMove != NULL) {
-        if (pMove->element == x) {
+        //要删除的节点不是最后一个
+        if (pMove->element == x && pMove->next != NULL) {
 
             pMove->prior->next = pMove->next;
             pMove->next->prior = pMove->prior;
+            free(pMove);
+            pMove = NULL;
+            printf("%s函数执行，删除值为%d节点成功\n",__FUNCTION__,x);
+            return pNode;
+        }
+
+        //要删除的是最后一个节点
+        if (pMove->element == x && pMove->next == NULL) {
+
+            pMove->prior->next = NULL;
             free(pMove);
             pMove = NULL;
             printf("%s函数执行，删除值为%d节点成功\n",__FUNCTION__,x);
@@ -213,8 +240,8 @@ int main(int argc, const char * argv[]) {
     pList = createList(pList);
     printList(pList);
     
-//    pList = deletePosList(pList,1);
-//    printList(pList);
+    pList = deletePosList(pList,1);
+    printList(pList);
 
     pList = deleteValueList(pList,5);
     printList(pList);
